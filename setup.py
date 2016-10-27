@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # $Id$
-
+from __future__ import print_function
 from distutils.core import setup, Extension
 from distutils.command import config, clean
 import cPickle, glob, os, sys
@@ -58,7 +58,7 @@ class config_pcap(config.config):
                                     cfg['libraries'].append('iphlpapi')
                                     cfg['extra_compile_args'] = \
                                         [ '-DWIN32', '-DWPCAP' ]
-                                print 'found', cfg
+                                print('found', cfg)
                                 self._write_config_h(cfg)
                                 return cfg
         raise Exception("couldn't find pcap build or installation directory")
@@ -73,14 +73,14 @@ class clean_pcap(clean.clean):
     def run(self):
         clean.clean.run(self)
         if self.all and os.path.exists(pcap_cache):
-            print "removing '%s'" % pcap_cache
+            print("removing '%s'" % pcap_cache)
             os.unlink(pcap_cache)
 
 if len(sys.argv) > 1 and sys.argv[1] == 'build':
     try:
         pcap_config = cPickle.load(open(pcap_cache))
     except IOError:
-        print >>sys.stderr, 'run "%s config" first!' % sys.argv[0]
+        print('run "%s config" first!' % sys.argv[0], file=sys.stderr)
         sys.exit(1)
 
 pcap = Extension(name='pcap',
